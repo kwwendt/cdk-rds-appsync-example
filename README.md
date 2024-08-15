@@ -1,58 +1,25 @@
+ # AWS CDK Issue Example
 
-# Welcome to your CDK Python project!
+ Example repo to reproduce issue: https://github.com/aws/aws-cdk/issues/31116
 
-This is a blank project for CDK development with Python.
+ Steps to repro:
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+ Create and activate virtual env:
+ `python -m venv .venv`
+ `source .venv/bin/activate`
 
-This project is set up like a standard Python project.  The initialization
-process also creates a virtualenv within this project, stored under the `.venv`
-directory.  To create the virtualenv it assumes that there is a `python3`
-(or `python` for Windows) executable in your path with access to the `venv`
-package. If for any reason the automatic creation of the virtualenv fails,
-you can create the virtualenv manually.
+ Install requirements:
+ `pip install -r requirements.txt`
+ `npm install -g aws-cdk`
 
-To manually create a virtualenv on MacOS and Linux:
 
-```
-$ python3 -m venv .venv
-```
+With a combined stack creating an RDS cluster and AppSync API, synth and deploy works fine:
+`CDK_ACCOUNT=<account_id> cdk synth`
+or
+`CDK_ACCOUNT=<account_id> cdk deploy`
 
-After the init process completes and the virtualenv is created, you can use the following
-step to activate your virtualenv.
+but if you comment out the [RdsClusterStack](https://github.com/TonySherman/cdk-rds-appsync-example/blob/main/app.py#L24)
+and uncomment the [two separate stacks](https://github.com/TonySherman/cdk-rds-appsync-example/blob/main/app.py#L20-L21),
+the error is thrown:
 
-```
-$ source .venv/bin/activate
-```
-
-If you are a Windows platform, you would activate the virtualenv like this:
-
-```
-% .venv\Scripts\activate.bat
-```
-
-Once the virtualenv is activated, you can install the required dependencies.
-
-```
-$ pip install -r requirements.txt
-```
-
-At this point you can now synthesize the CloudFormation template for this code.
-
-```
-$ cdk synth
-```
-
-To add additional dependencies, for example other CDK libraries, just add
-them to your `setup.py` file and rerun the `pip install -r requirements.txt`
-command.
-
-## Useful commands
-
- * `cdk ls`          list all stacks in the app
- * `cdk synth`       emits the synthesized CloudFormation template
- * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk docs`        open CDK documentation
-
-Enjoy!
+`RuntimeError: Error: Cannot grant Data API access when the Data API is disabled`
