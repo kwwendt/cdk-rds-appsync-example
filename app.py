@@ -10,17 +10,16 @@ from single_stack.rds_appsync_single_stack import RdsClusterAppSync
 app = cdk.App()
 
 env = cdk.Environment(
-    account=os.getenv("CDK_ACCOUNT"),
-    region="us-east-1",
+    account=os.getenv("CDK_ACCOUNT_DEFAULT"),
+    region="us-west-2",
 )
-
 
 # Two stacks, One creating an RDS cluster, the other
 # looks up the cluster to use as an appsync data source.
-# RdsClusterStack(app, "RdsClusterStack", env=env)
-# AppSyncApiStack(app, "AppSyncApiStack", env=env) # Cannot synth
+RdsClusterStack(app, "RdsClusterStack", env=env)
+AppSyncApiStack(app, "AppSyncApiStack", env=env) # Cannot synth
 
 # Creating the cluster and api in a single stack works
-RdsClusterAppSync(app, "RdsAppSyncStack", env=env)
+#RdsClusterAppSync(app, "RdsAppSyncStack", env=env)
 
 app.synth()

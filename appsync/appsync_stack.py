@@ -18,19 +18,17 @@ class AppSyncApiStack(Stack):
         rds_secret = aws_secretsmanager.Secret.from_secret_partial_arn(
             self,
             "rds-secret",
-            secret_partial_arn=f"arn:aws:secretsmanager:{stack.region}:{stack.account}:secret:RdsClusterStackAuroraCluste-nRwpQKS9XavU",
+            secret_partial_arn=f"arn:aws:secretsmanager:{stack.region}:{stack.account}:secret:RdsClusterStackAuroraCluste-",
         )
 
-
-        rds_cluster = rds.DatabaseCluster.from_database_cluster_attributes(
+        rds_cluster = rds.ServerlessCluster.from_serverless_cluster_attributes(
             self,
             "ClusterFromOtherStack",
             cluster_identifier="db-endpoint-test",
         )
 
-
         api.add_rds_data_source(
             'rds-datasource',
             rds_cluster,
-            secret_store=rds_secret,
+            secret_store=rds_secret
         )
